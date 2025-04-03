@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.10.102:3306/gulimall_ums?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.10.102:8848
+  application:
+    name: gulimall-member
+
+
+mybatis-plus:
+#  这里带星号表示不止扫描自己类路径下面的xml文件，引入其它依赖下面的类路径也要扫
+#  mapper-locations: classpath*:/mapper/**/*.xml
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto       #设置数据库里面的表主键为自增，因为我们在建表的时候没有将其设置为自增
+server:
+  port: 8000

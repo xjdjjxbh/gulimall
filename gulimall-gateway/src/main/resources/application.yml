@@ -1,0 +1,76 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: product_route
+          uri: lb://gulimall-product
+          #路由断言越详细就要越往前面放，如果放到了后面，那么路由断言会被前面的短的给匹配成功，从而路由到了错误的地址
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: member_route
+          uri: lb://gulimall-member
+          #路由断言越详细就要越往前面放，如果放到了后面，那么路由断言会被前面的短的给匹配成功，从而路由到了错误的地址
+          predicates:
+            - Path=/api/member/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: ware_route
+          uri: lb://gulimall-ware
+          #路由断言越详细就要越往前面放，如果放到了后面，那么路由断言会被前面的短的给匹配成功，从而路由到了错误的地址
+          predicates:
+            - Path=/api/ware/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          #路由断言越详细就要越往前面放，如果放到了后面，那么路由断言会被前面的短的给匹配成功，从而路由到了错误的地址
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+        #这个是兜底的路由，如果其它路由都没有匹配上，那么就会转发到这个路由上面来
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/renren-fast/${segment}
+
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
+
+        - id: gulimall_search_route
+          uri: lb://gulimall-search
+          predicates:
+            - Host=search.gulimall.com
+
+        - id: gulimall_cart_route
+          uri: lb://gulimall-cart
+          predicates:
+            - Host=cart.gulimall.com
+
+        - id: gulimall_order_route
+          uri: lb://gulimall-order
+          predicates:
+            - Host=order.gulimall.com
+
+        - id: gulimall_auth_route
+          uri: lb://gulimall-auth-server
+          predicates:
+            - Host=auth.gulimall.com
+
+
+
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有路径
+            allowedOrigins: "*"  # 允许所有来源
+            allowedMethods: "*"  # 允许所有 HTTP 方法
+            allowedHeaders: "*"  # 允许所有请求头
+            allowCredentials: true  # 允许携带 Cookie 或认证信息
+
+
